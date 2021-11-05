@@ -44,7 +44,7 @@ jobs:
         with:
           context: ./custom-nginx
           build-args: ENABLED_MODULES=ngx_http_substitutions_filter_module
-          file: ./Dockerfile
+          file: ./docker-nginx/modules/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: dup4/nginx:latest
