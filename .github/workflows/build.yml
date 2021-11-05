@@ -42,7 +42,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: ./my-nginx
           build-args: ENABLED_MODULES="ngx_http_substitutions_filter_module"
           file: ./docker-nginx/modules/Dockerfile
           platforms: linux/amd64,linux/arm64
