@@ -12,6 +12,7 @@ COPY ./ /modules/
 
 RUN set -ex \
 		&& ls /modules \
+		&& ls /modules/ngx_http_substitutions_filter_module \
     && apt update \
     && apt install -y --no-install-suggests --no-install-recommends \
                 patch make wget mercurial devscripts debhelper dpkg-dev \
@@ -22,7 +23,7 @@ RUN set -ex \
     && mkdir /tmp/packages \
     && for module in $ENABLED_MODULES; do \
         echo "Building $module for nginx-$NGINX_VERSION"; \
-        if [[ -d /modules/$module ]]; then \
+        if [ -d /modules/$module ]; then \
             echo "Building $module from user-supplied sources"; \
             # check if module sources file is there and not empty
             if [ ! -s /modules/$module/source ]; then \
