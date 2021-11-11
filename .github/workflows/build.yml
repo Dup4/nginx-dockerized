@@ -43,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./custom-nginx
-          build-args: ENABLED_MODULES=ngx_http_substitutions_filter_module
+          build-args: ENABLED_MODULES=ngx_http_substitutions_filter_module nginx-module-vts
           file: ./docker-nginx/modules/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
