@@ -1,8 +1,10 @@
 #! /bin/bash
 
-# shellcheck disable=SC2086
+# shellcheck source=/dev/null
+source "./env.sh"
+
 docker build \
-	--build-arg ENABLED_MODULES="ngx_http_substitutions_filter_module" \
+	--build-arg ENABLED_MODULES="${ENABLED_MODULES}" \
 	-t dup4/nginx:latest \
 	. \
 	-f ../docker-nginx/modules/Dockerfile
