@@ -56,7 +56,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./custom-nginx
+          context: ./
           build-args: ENABLED_MODULES=${{ env.GITHUB_ENV_ENABLED_MODULES }}
           file: ./docker-nginx/modules/Dockerfile
           platforms: linux/amd64,linux/arm64
