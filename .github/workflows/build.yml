@@ -12,10 +12,11 @@ jobs:
         with:
           submodules: true
 
-      - name: Set ENABLED_MODULES
+      - name: Init
         run: |
           source ./custom-nginx/env.sh
           echo "GITHUB_ENV_ENABLED_MODULES=${ENABLED_MODULES}" >> $GITHUB_ENV
+          bash modify_dockerfile.sh
 
       - name: Set up QEMU
         id: qemu
