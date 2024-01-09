@@ -9,13 +9,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: true
 
       - name: Init
         run: |
           source ./custom-nginx/env.sh
           echo "GITHUB_ENV_ENABLED_MODULES=${ENABLED_MODULES}" >> $GITHUB_ENV
+          VERSION="$(cat VERSION)"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
           bash ./custom-nginx/modify_dockerfile.sh
 
       - name: Set up QEMU
@@ -63,4 +63,6 @@ jobs:
           push: true
           tags: |
             dup4/nginx:latest
+            dup4/nginx:${{ env.VERSION }}
             registry.cn-shanghai.aliyuncs.com/dup4/nginx:latest
+            registry.cn-shanghai.aliyuncs.com/dup4/nginx:${{ env.VERSION }}
