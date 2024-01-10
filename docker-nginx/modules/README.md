@@ -13,7 +13,10 @@ $ docker build --build-arg ENABLED_MODULES="ndk lua" -t my-nginx-with-lua .
 This command will attempt to build an image called `my-nginx-with-lua` based on
 official nginx docker hub image with two modules: `ndk` and `lua`.
 By default, a Debian-based image will be used.  If you wish to use Alpine
-instead, add `-f Dockerfile.alpine` to the command line.
+instead, add `-f Dockerfile.alpine` to the command line.  By default, mainline
+images are used as a base, but it's possible to specify a different image by
+providing `NGINX_FROM_IMAGE` build argument, e.g. `--build-arg
+NGINX_FROM_IMAGE=nginx:stable`.
 
 The build script will look for module build definition files on filesystem
 directory under the same name as the module (and resulting package) and if
@@ -30,25 +33,25 @@ are available from `pkg-oss` repository:
 ```
 /pkg-oss $ LC_ALL=C make -C debian list-all-modules
 make: Entering directory '/pkg-oss/debian'
-auth-spnego             1.1.0-1
-brotli                  1.0.0-1
-encrypted-session       0.08-1
-fips-check              0.1-1
-geoip                   1.21.0-1
-geoip2                  3.3-1
-headers-more            0.33-1
-image-filter            1.21.0-1
-lua                     0.10.19-1
-modsecurity             1.0.1-2
-ndk                     0.3.1-1
-njs                     0.5.3-1
-opentracing             0.14.0-1
-passenger               6.0.8-1
-perl                    1.21.0-1
-rtmp                    1.2.1-1
-set-misc                0.32-1
-subs-filter             0.6.4-1
-xslt                    1.21.0-1
+auth-spnego         	1.1.1-1
+brotli              	1.0.0-1
+encrypted-session   	0.09-1
+fips-check          	0.1-1
+geoip               	1.25.1-1
+geoip2              	3.4-1
+headers-more        	0.34-1
+image-filter        	1.25.1-1
+lua                 	0.10.25-1
+modsecurity         	1.0.3-3
+ndk                 	0.3.2-1
+njs                 	0.8.0-1
+opentracing         	0.29.0-1
+passenger           	6.0.18-1
+perl                	1.25.1-1
+rtmp                	1.2.2-1
+set-misc            	0.33-1
+subs-filter         	0.6.4-1
+xslt                	1.25.1-1
 make: Leaving directory '/pkg-oss/debian'
 ```
 

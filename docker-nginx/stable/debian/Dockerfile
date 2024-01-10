@@ -7,27 +7,31 @@ FROM debian:bullseye-slim
 
 LABEL maintainer="NGINX Docker Maintainers <docker-maint@nginx.com>"
 
-ENV NGINX_VERSION   1.20.2
-ENV NJS_VERSION     0.7.3
+ENV NGINX_VERSION   1.24.0
+ENV NJS_VERSION     0.8.0
 ENV PKG_RELEASE     1~bullseye
 
 RUN set -x \
 # create nginx user/group first, to be consistent throughout docker variants
-    && addgroup --system --gid 101 nginx \
-    && adduser --system --disabled-login --ingroup nginx --no-create-home --home /nonexistent --gecos "nginx user" --shell /bin/false --uid 101 nginx \
+    && groupadd --system --gid 101 nginx \
+    && useradd --system --gid nginx --no-create-home --home /nonexistent --comment "nginx user" --shell /bin/false --uid 101 nginx \
     && apt-get update \
     && apt-get install --no-install-recommends --no-install-suggests -y gnupg1 ca-certificates \
     && \
     NGINX_GPGKEY=573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62; \
+    NGINX_GPGKEY_PATH=/usr/share/keyrings/nginx-archive-keyring.gpg; \
+    export GNUPGHOME="$(mktemp -d)"; \
     found=''; \
     for server in \
         hkp://keyserver.ubuntu.com:80 \
         pgp.mit.edu \
     ; do \
         echo "Fetching GPG key $NGINX_GPGKEY from $server"; \
-        apt-key adv --keyserver "$server" --keyserver-options timeout=10 --recv-keys "$NGINX_GPGKEY" && found=yes && break; \
+        gpg1 --keyserver "$server" --keyserver-options timeout=10 --recv-keys "$NGINX_GPGKEY" && found=yes && break; \
     done; \
     test -z "$found" && echo >&2 "error: failed to fetch GPG key $NGINX_GPGKEY" && exit 1; \
+    gpg1 --export "$NGINX_GPGKEY" > "$NGINX_GPGKEY_PATH" ; \
+    rm -rf "$GNUPGHOME"; \
     apt-get remove --purge --auto-remove -y gnupg1 && rm -rf /var/lib/apt/lists/* \
     && dpkgArch="$(dpkg --print-architecture)" \
     && nginxPackages=" \
@@ -40,13 +44,13 @@ RUN set -x \
     && case "$dpkgArch" in \
         amd64|arm64) \
 # arches officialy built by upstream
-            echo "deb https://nginx.org/packages/debian/ bullseye nginx" >> /etc/apt/sources.list.d/nginx.list \
+            echo "deb [signed-by=$NGINX_GPGKEY_PATH] https://nginx.org/packages/debian/ bullseye nginx" >> /etc/apt/sources.list.d/nginx.list \
             && apt-get update \
             ;; \
         *) \
 # we're on an architecture upstream doesn't officially build for
 # let's build binaries from the published source packages
-            echo "deb-src https://nginx.org/packages/debian/ bullseye nginx" >> /etc/apt/sources.list.d/nginx.list \
+            echo "deb-src [signed-by=$NGINX_GPGKEY_PATH] https://nginx.org/packages/debian/ bullseye nginx" >> /etc/apt/sources.list.d/nginx.list \
             \
 # new directory for storing sources and .deb files
             && tempDir="$(mktemp -d)" \
@@ -103,6 +107,7 @@ RUN set -x \
 
 COPY docker-entrypoint.sh /
 COPY 10-listen-on-ipv6-by-default.sh /docker-entrypoint.d
+COPY 15-local-resolvers.envsh /docker-entrypoint.d
 COPY 20-envsubst-on-templates.sh /docker-entrypoint.d
 COPY 30-tune-worker-processes.sh /docker-entrypoint.d
 ENTRYPOINT ["/docker-entrypoint.sh"]
