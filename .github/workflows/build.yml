@@ -56,8 +56,10 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./
-          build-args: ENABLED_MODULES=${{ env.GITHUB_ENV_ENABLED_MODULES }} NGINX_FROM_IMAGE=${{ env.VERSION }}
+          context: ./docker-nginx/modules
+          build-args: |
+            ENABLED_MODULES="${{ env.GITHUB_ENV_ENABLED_MODULES }}"
+            NGINX_FROM_IMAGE="${{ env.VERSION }}"
           file: ./docker-nginx/modules/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
