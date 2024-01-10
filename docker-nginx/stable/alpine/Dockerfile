@@ -3,12 +3,12 @@
 #
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
-FROM alpine:3.16
+FROM alpine:3.14
 
 LABEL maintainer="NGINX Docker Maintainers <docker-maint@nginx.com>"
 
-ENV NGINX_VERSION 1.22.0
-ENV NJS_VERSION   0.7.6
+ENV NGINX_VERSION 1.20.2
+ENV NJS_VERSION   0.7.3
 ENV PKG_RELEASE   1
 
 RUN set -x \
@@ -52,7 +52,7 @@ RUN set -x \
                 libc-dev \
                 make \
                 openssl-dev \
-                pcre2-dev \
+                pcre-dev \
                 zlib-dev \
                 linux-headers \
                 libxslt-dev \
@@ -66,16 +66,16 @@ RUN set -x \
             && su nobody -s /bin/sh -c " \
                 export HOME=${tempDir} \
                 && cd ${tempDir} \
-                && curl -f -O https://hg.nginx.org/pkg-oss/archive/725.tar.gz \
-                && PKGOSSCHECKSUM=\"a6c56bb7e98be77337affe349e1316a71ddad7a732dc3b34294a794b3e740d68385022f0de72d08c090156f194580a92dcb8b5e2aa1c9c29b5a8484a6431e9b3 *725.tar.gz\" \
-                && if [ \"\$(openssl sha512 -r 725.tar.gz)\" = \"\$PKGOSSCHECKSUM\" ]; then \
+                && curl -f -O https://hg.nginx.org/pkg-oss/archive/689.tar.gz \
+                && PKGOSSCHECKSUM=\"b3cb5de3d22b4db2ab478e60469638e1935cb91c20405e33bdbf7303766278cf864bace62f95ef40f4fe39e92731f53ce1c4a18192ec7f7820f4083cd9384116 *689.tar.gz\" \
+                && if [ \"\$(openssl sha512 -r 689.tar.gz)\" = \"\$PKGOSSCHECKSUM\" ]; then \
                     echo \"pkg-oss tarball checksum verification succeeded!\"; \
                 else \
                     echo \"pkg-oss tarball checksum verification failed!\"; \
                     exit 1; \
                 fi \
-                && tar xzvf 725.tar.gz \
-                && cd pkg-oss-725 \
+                && tar xzvf 689.tar.gz \
+                && cd pkg-oss-689 \
                 && cd alpine \
                 && make all \
                 && apk index -o ${tempDir}/packages/alpine/${apkArch}/APKINDEX.tar.gz ${tempDir}/packages/alpine/${apkArch}/*.apk \
