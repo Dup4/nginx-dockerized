@@ -1,6 +1,6 @@
 # nginx-dockerized
 
-* hub.docker.com/r/dup4/nginx
+* https://hub.docker.com/r/dup4/nginx
 
 ## Sponsors
 
