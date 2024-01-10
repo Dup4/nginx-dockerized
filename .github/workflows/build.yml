@@ -59,7 +59,7 @@ jobs:
           context: ./docker-nginx/modules
           build-args: |
             ENABLED_MODULES=${{ env.GITHUB_ENV_ENABLED_MODULES }}
-            NGINX_FROM_IMAGE=${{ env.VERSION }}
+            NGINX_FROM_IMAGE=nginx:${{ env.VERSION }}
           file: ./docker-nginx/modules/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
